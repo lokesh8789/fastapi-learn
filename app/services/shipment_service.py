@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException
 from app.configs.db_config import DBSessionDep
 from app.models.shipment import Shipment
 from app.repos.shipment_repo import ShipmentRepository, ShipmentRepositoryDep
-from app.schemas.shipment import ShipmentCreate, ShipmentResponse
+from app.schemas.shipment import ShipmentCreate, ShipmentResponse, ShipmentUpdate
 
 
 class ShipmentService:
@@ -31,7 +31,7 @@ class ShipmentService:
 
     async def get_shipment_by_id(
         self, db: DBSessionDep, shipment_id: int
-    ) -> ShipmentResponse | None:
+    ) -> ShipmentResponse:
         shipment = await self.shipment_repo.find_by_id(
             db,
             shipment_id,
@@ -57,7 +57,7 @@ class ShipmentService:
         ]
 
     async def update_shipment(
-        self, db: DBSessionDep, shipment_id: int, request: ShipmentCreate
+        self, db: DBSessionDep, shipment_id: int, request: ShipmentUpdate
     ) -> ShipmentResponse:
         shipment = await self.shipment_repo.find_by_id(
             db,

@@ -1,5 +1,3 @@
-from enum import Enum
-
 from sqlalchemy import Column, String
 from sqlmodel import Field, SQLModel
 

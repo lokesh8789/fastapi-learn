@@ -2,11 +2,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class DatabaseSettings(BaseSettings):
-    POSTGRES_PASSWORD: str
-    POSTGRES_USERNAME: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int
+    POSTGRES_PASSWORD: str = ""
+    POSTGRES_USERNAME: str = ""
+    POSTGRES_DB: str = ""
+    POSTGRES_HOST: str = ""
+    POSTGRES_PORT: int = 5432
 
     model_config = SettingsConfigDict(
         env_file=".env",

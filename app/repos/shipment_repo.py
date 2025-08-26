@@ -21,7 +21,7 @@ class ShipmentRepository:
 
     async def find_all(self, db: DBSessionDep) -> list[Shipment]:
         result = await db.execute(select(Shipment))
-        return result.scalars().all()
+        return list(result.scalars().all())
 
     async def delete(self, db: DBSessionDep, shipment: Shipment) -> None:
         await db.delete(shipment)

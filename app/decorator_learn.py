@@ -1,6 +1,6 @@
 import inspect
 from functools import wraps
-from typing import Any, Callable
+from typing import Callable
 
 
 def log(val: str):

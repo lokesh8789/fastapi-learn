@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from scalar_fastapi import get_scalar_api_reference
+from scalar_fastapi import get_scalar_api_reference  # type: ignore
 from sqlalchemy import text
 
 from app.configs.db_config import async_session
