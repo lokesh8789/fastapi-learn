@@ -1,10 +1,11 @@
 from functools import lru_cache
+from typing import Annotated
 
 from fastapi import Depends, HTTPException
 
-from app.dependencies import DBSessionDep, ShipmentRepositoryDep
+from app.configs.db_config import DBSessionDep
 from app.models.shipment import Shipment
-from app.repos.shipment_repo import ShipmentRepository
+from app.repos.shipment_repo import ShipmentRepository, ShipmentRepositoryDep
 from app.schemas.shipment import ShipmentCreate, ShipmentResponse
 
 
@@ -102,3 +103,6 @@ def get_shipment_service(
     return ShipmentService(
         shipment_repo=shipment_repository,
     )
+
+
+ShipmentServiceDep = Annotated[ShipmentService, Depends(get_shipment_service)]

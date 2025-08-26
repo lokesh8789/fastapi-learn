@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, status
 
-from app.dependencies import DBSessionDep, ShipmentServiceDep
-from app.schemas.shipment import (ShipmentCreate, ShipmentResponse,
-                                  ShipmentUpdate)
-from app.services.shipment_service import ShipmentService, get_shipment_service
+from app.configs.db_config import DBSessionDep
+from app.schemas.shipment import ShipmentCreate, ShipmentResponse, ShipmentUpdate
+from app.services.shipment_service import ShipmentServiceDep
 
 router = APIRouter(prefix="/api/v1/shipments", tags=["Shipment API"])
 

@@ -1,8 +1,10 @@
 from functools import lru_cache
+from typing import Annotated
 
+from fastapi import Depends
 from sqlmodel import select
 
-from app.dependencies import DBSessionDep
+from app.configs.db_config import DBSessionDep
 from app.models.shipment import Shipment
 
 
@@ -30,3 +32,5 @@ class ShipmentRepository:
 def get_shipment_repository() -> ShipmentRepository:
     print("Creating ShipmentRepository")
     return ShipmentRepository()
+
+ShipmentRepositoryDep = Annotated[ShipmentRepository, Depends(get_shipment_repository)]
