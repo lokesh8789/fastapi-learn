@@ -9,7 +9,7 @@ from app.configs.app_config import settings
 
 engine: AsyncEngine = create_async_engine(
     url=settings.POSTGRES_URL,
-    echo=True,
+    echo=False,
 )
 
 async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(

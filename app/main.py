@@ -7,7 +7,7 @@ from scalar_fastapi import get_scalar_api_reference  # type: ignore
 from sqlalchemy import text
 
 from app.configs.db_config import async_session
-from app.routers import health, shipment
+from app.routers import health, shipment, user
 from app.utils.logger import get_logger
 
 log = get_logger(__name__)
@@ -56,3 +56,4 @@ app.add_middleware(
 ## Routers
 app.include_router(health.router)
 app.include_router(shipment.router)
+app.include_router(user.router)
