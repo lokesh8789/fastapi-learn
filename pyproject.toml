@@ -7,6 +7,9 @@ requires-python = ">=3.13"
 dependencies = [
     "asyncpg>=0.30.0",
     "fastapi[all]>=0.115.12",
+    "passlib[bcrypt]>=1.7.4",
+    "pyjwt>=2.10.1",
     "scalar-fastapi>=1.0.3",
     "sqlmodel>=0.0.24",
+    "types-passlib>=1.7.7.20250602",
 ]

@@ -28,6 +28,10 @@ class UserRepository:
         await db.delete(user)
         await db.commit()
 
+    async def find_by_email(self, db: DBSessionDep, email: str) -> User | None:
+        result = await db.execute(select(User).where(User.email == email))
+        return result.scalars().first()
+
 
 @lru_cache
 def get_user_repository() -> UserRepository:

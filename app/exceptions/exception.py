@@ -25,3 +25,11 @@ class AlreadyExistsException(BusinessException):
             status_code=status.HTTP_409_CONFLICT,
             message=message,
         )
+
+
+class AuthenticationException(BusinessException):
+    def __init__(self, message: str = "Authentication Failed"):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            message=message,
+        )

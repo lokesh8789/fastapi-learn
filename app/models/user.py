@@ -16,8 +16,16 @@ class User(SQLModel, table=True):
     name: str = Field(
         nullable=False,
     )
-    
+
     is_active: bool = Field(
         default=True,
         nullable=False,
     )
+
+    email: str = Field(
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
+    password: str = Field()

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.configs.db_config import DBSessionDep
+from app.dependencies import CurrentUserDep
 from app.schemas.user import UserCreate, UserSchema
 from app.services.user_service import UserServiceDep
 from app.utils.logger import get_logger
@@ -29,8 +30,9 @@ async def get_user(
     id: int,
     db: DBSessionDep,
     user_service: UserServiceDep,
+    current_user: CurrentUserDep
 ) -> UserSchema:
-    log.info("Fetching user by ID")
+    log.info(f"Fetching user by ID with current user is: {current_user.email}")
     return await user_service.get_user_by_id(db, id)
 
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 
 from app.exceptions.exception import (
+    AuthenticationException,
     BusinessException,
     AlreadyExistsException,
     NotFoundException,
@@ -38,6 +39,18 @@ def global_exception_handler(app: FastAPI) -> None:
             detail=ex.message,
         ).to_response()
 
+    @app.exception_handler(AuthenticationException)
+    def handle_authentication_exception(
+        request: Request,
+        ex: AuthenticationException,
+    ) -> JSONResponse:
+        log.info("Handling AuthenticationException")
+        return ProblemDetails(
+            status=ex.status_code,
+            title="Unauthorized",
+            detail=ex.message,
+        ).to_response()
+
     @app.exception_handler(BusinessException)
     def handle_business_exception(
         request: Request,
@@ -67,7 +80,7 @@ def global_exception_handler(app: FastAPI) -> None:
         request: Request,
         ex: Exception,
     ) -> JSONResponse:
-        log.error(f"Handling generic Exception: {str(ex)}")
+        log.info("Handling generic Exception")
         return ProblemDetails(
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             title="Internal Server Error",

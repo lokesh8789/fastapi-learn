@@ -8,7 +8,8 @@ from sqlalchemy import text
 
 from app.configs.db_config import async_session
 from app.exceptions.global_exception_handler import global_exception_handler
-from app.routers import health, shipment, user
+from app.middlewares.jwt_middleware import JWTMiddleware
+from app.routers import auth, health, shipment, user
 from app.utils.logger import get_logger
 
 log = get_logger(__name__)
@@ -45,6 +46,8 @@ app.add_middleware(
     allow_methods=["*"],
 )
 
+app.add_middleware(JWTMiddleware)
+
 
 # @app.middleware("http")
 # async def custom_middleware(request: Request, call_next):
@@ -58,3 +61,4 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(shipment.router)
 app.include_router(user.router)
+app.include_router(auth.router)
