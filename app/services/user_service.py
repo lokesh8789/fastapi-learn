@@ -1,8 +1,9 @@
 from functools import lru_cache
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from app.configs.db_config import DBSessionDep
+from app.exceptions.exception import NotFoundException
 from app.models.user import User
 from app.repos.user_repo import UserRepository, UserRepositoryDep
 from app.schemas.user import UserCreate, UserSchema
@@ -20,9 +21,7 @@ class UserService:
         user = await self.user_repo.find_by_id(db, user_id)
         if user:
             return UserSchema(**user.model_dump())
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
+        raise NotFoundException(f"User with {user_id} not found")
 
     async def get_all_users(self, db: DBSessionDep) -> list[UserSchema]:
         return [

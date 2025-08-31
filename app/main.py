@@ -7,10 +7,12 @@ from scalar_fastapi import get_scalar_api_reference  # type: ignore
 from sqlalchemy import text
 
 from app.configs.db_config import async_session
+from app.exceptions.global_exception_handler import global_exception_handler
 from app.routers import health, shipment, user
 from app.utils.logger import get_logger
 
 log = get_logger(__name__)
+
 
 @asynccontextmanager
 async def lifespan_handler(app: FastAPI):
@@ -21,11 +23,7 @@ async def lifespan_handler(app: FastAPI):
     log.info("App shutdown")
 
 
-app = FastAPI(
-    lifespan=lifespan_handler,
-    docs_url=None,
-    redoc_url=None
-)
+app = FastAPI(lifespan=lifespan_handler, docs_url=None, redoc_url=None)
 
 
 @app.get("/docs", include_in_schema=False)
@@ -36,6 +34,9 @@ async def scalar_docs() -> HTMLResponse:
         title="Scalar API",
     )
 
+
+## Exception Handler
+global_exception_handler(app)
 
 ## Middlewares
 app.add_middleware(

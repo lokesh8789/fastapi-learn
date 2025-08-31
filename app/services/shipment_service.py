@@ -1,15 +1,17 @@
 from functools import lru_cache
 from typing import Annotated
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 
 from app.configs.db_config import DBSessionDep
+from app.exceptions.exception import NotFoundException
 from app.models.shipment import Shipment
 from app.repos.shipment_repo import ShipmentRepository, ShipmentRepositoryDep
 from app.schemas.shipment import ShipmentCreate, ShipmentResponse, ShipmentUpdate
 from app.utils.logger import get_logger
 
 log = get_logger(__name__)
+
 
 class ShipmentService:
     def __init__(
@@ -44,10 +46,7 @@ class ShipmentService:
                 **shipment.model_dump(),
             )
 
-        raise HTTPException(
-            status_code=404,
-            detail="Shipment not found",
-        )
+        raise NotFoundException("Shipment not found")
 
     async def get_all_shipments(self, db: DBSessionDep) -> list[ShipmentResponse]:
         shipments = await self.shipment_repo.find_all(db)
@@ -67,10 +66,7 @@ class ShipmentService:
         )
 
         if not shipment:
-            raise HTTPException(
-                status_code=404,
-                detail="Shipment not found",
-            )
+            raise NotFoundException("Shipment not found")
 
         for key, value in request.model_dump(exclude_none=True).items():
             setattr(shipment, key, value)
@@ -88,10 +84,7 @@ class ShipmentService:
         )
 
         if not shipment:
-            raise HTTPException(
-                status_code=404,
-                detail="Shipment not found",
-            )
+            raise NotFoundException("Shipment not found")
 
         await self.shipment_repo.delete(db, shipment)
         return None

@@ -1,8 +1,9 @@
 from functools import lru_cache
 from typing import Annotated
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlmodel import select
 from app.configs.db_config import DBSessionDep
+from app.exceptions.exception import NotFoundException
 from app.models.user import User
 
 
@@ -23,10 +24,7 @@ class UserRepository:
     async def delete(self, db: DBSessionDep, user_id: int) -> None:
         user = await self.find_by_id(db, user_id)
         if not user:
-            raise HTTPException(
-                status_code=404,
-                detail="User not found",
-            )
+            raise NotFoundException("User not found")
         await db.delete(user)
         await db.commit()
 
