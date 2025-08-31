@@ -7,28 +7,30 @@ from scalar_fastapi import get_scalar_api_reference  # type: ignore
 from sqlalchemy import text
 
 from app.configs.db_config import async_session
-from app.decorator_learn import log
 from app.routers import health, shipment
+from app.utils.logger import get_logger
 
+log = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan_handler(app: FastAPI):
-    print("App startup")
+    log.info("App startup")
     async with async_session() as session:
         await session.execute(text("Select 1"))
     yield
-    print("App shutdown")
+    log.info("App shutdown")
 
 
 app = FastAPI(
     lifespan=lifespan_handler,
+    docs_url=None,
+    redoc_url=None
 )
 
 
-@app.get("/scalar", include_in_schema=False)
-@log(val="Accessing Scalar Docs")
+@app.get("/docs", include_in_schema=False)
 async def scalar_docs() -> HTMLResponse:
-    print("Scalar API reference")
+    log.info("Scalar API reference")
     return get_scalar_api_reference(
         openapi_url=app.openapi_url,
         title="Scalar API",
@@ -45,9 +47,9 @@ app.add_middleware(
 
 # @app.middleware("http")
 # async def custom_middleware(request: Request, call_next):
-#     print("Inside custom_middleware")
+#     log.info("Inside custom_middleware")
 #     response: Response = await call_next(request)
-#     print(f"Returning Response {str(response.body)}")
+#     log.info(f"Returning Response {str(response.body)}")
 #     return response
 
 

@@ -21,6 +21,3 @@ class DatabaseSettings(BaseSettings):
 
 
 settings = DatabaseSettings()
-settings.POSTGRES_URL
-
-print(settings.POSTGRES_DB)

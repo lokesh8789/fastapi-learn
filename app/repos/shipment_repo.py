@@ -6,7 +6,9 @@ from sqlmodel import select
 
 from app.configs.db_config import DBSessionDep
 from app.models.shipment import Shipment
+from app.utils.logger import get_logger
 
+log = get_logger(__name__)
 
 class ShipmentRepository:
 
@@ -30,7 +32,7 @@ class ShipmentRepository:
 
 @lru_cache
 def get_shipment_repository() -> ShipmentRepository:
-    print("Creating ShipmentRepository")
+    log.info("Creating ShipmentRepository")
     return ShipmentRepository()
 
 ShipmentRepositoryDep = Annotated[ShipmentRepository, Depends(get_shipment_repository)]

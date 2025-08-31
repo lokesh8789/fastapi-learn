@@ -7,7 +7,9 @@ from app.configs.db_config import DBSessionDep
 from app.models.shipment import Shipment
 from app.repos.shipment_repo import ShipmentRepository, ShipmentRepositoryDep
 from app.schemas.shipment import ShipmentCreate, ShipmentResponse, ShipmentUpdate
+from app.utils.logger import get_logger
 
+log = get_logger(__name__)
 
 class ShipmentService:
     def __init__(
@@ -99,7 +101,7 @@ class ShipmentService:
 def get_shipment_service(
     shipment_repository: ShipmentRepositoryDep,
 ) -> ShipmentService:
-    print("Creating ShipmentService")
+    log.info("Creating ShipmentService")
     return ShipmentService(
         shipment_repo=shipment_repository,
     )
