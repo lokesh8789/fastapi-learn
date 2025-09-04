@@ -1,5 +1,5 @@
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi import Request
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+from fastapi import Request, Response
 
 from app.configs.db_config import async_session
 from app.exceptions.exception import AuthenticationException
@@ -15,11 +15,16 @@ public_paths = [
     "/api/v1/users/create",
     "/docs",
     "/openapi.json",
+    "/api/v1/health",
 ]
 
 
 class JWTMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(
+        self,
+        request: Request,
+        call_next: RequestResponseEndpoint,
+    ) -> Response:
         log.info(f"JWTMiddleware: Processing request {request.url.path}")
         try:
             # Skip public endpoints
