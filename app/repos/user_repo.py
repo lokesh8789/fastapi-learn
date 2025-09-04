@@ -30,7 +30,7 @@ class UserRepository:
 
     async def find_by_email(self, db: DBSessionDep, email: str) -> User | None:
         result = await db.execute(select(User).where(User.email == email))
-        return result.scalars().first()
+        return result.scalars().one_or_none()
 
 
 @lru_cache

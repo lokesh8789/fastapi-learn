@@ -10,7 +10,7 @@ from app.utils.logger import get_logger
 
 log = get_logger(__name__)
 
-public_paths = [
+public_paths: list[str] = [
     "/api/v1/auth/login",
     "/api/v1/users/create",
     "/docs",
