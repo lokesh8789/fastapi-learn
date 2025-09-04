@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.exceptions.exception import (
     AuthenticationException,
@@ -63,10 +65,22 @@ def global_exception_handler(app: FastAPI) -> None:
             detail=ex.message,
         ).to_response()
 
-    @app.exception_handler(HTTPException)
+    @app.exception_handler(RequestValidationError)
+    def handle_request_validation_exception(
+        request: Request,
+        ex: RequestValidationError,
+    ) -> JSONResponse:
+        log.info("Handling RequestValidationException")
+        return ProblemDetails(
+            status=status.HTTP_400_BAD_REQUEST,
+            title=ex.body,
+            detail=str(ex.errors()),
+        ).to_response()
+
+    @app.exception_handler(StarletteHTTPException)
     def handle_http_exception(
         request: Request,
-        ex: HTTPException,
+        ex: StarletteHTTPException,
     ) -> JSONResponse:
         log.info("Handling HTTPException")
         return ProblemDetails(

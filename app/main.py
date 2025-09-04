@@ -24,7 +24,11 @@ async def lifespan_handler(app: FastAPI):
     log.info("App shutdown")
 
 
-app = FastAPI(lifespan=lifespan_handler, docs_url=None, redoc_url=None)
+app = FastAPI(
+    lifespan=lifespan_handler,
+    docs_url=None,
+    redoc_url=None,
+)
 
 
 @app.get("/docs", include_in_schema=False)
@@ -47,6 +51,16 @@ app.add_middleware(
 )
 
 app.add_middleware(JWTMiddleware)
+
+
+# def middle(request: Request, call_next):
+#     log.info(f"Inside custom middleware for {request.url.path}")
+#     response = call_next(request)
+#     log.info(f"Returning Response {str(response.body)}")
+#     return response
+
+
+# app.middleware("http")(middle)
 
 
 # @app.middleware("http")
