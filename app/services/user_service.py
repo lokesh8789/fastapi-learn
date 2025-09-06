@@ -1,3 +1,4 @@
+import asyncio
 from functools import lru_cache
 from typing import Annotated
 
@@ -28,6 +29,7 @@ class UserService:
 
     async def get_user_by_id(self, db: DBSessionDep, user_id: int) -> UserSchema:
         user = await self.user_repo.find_by_id(db, user_id)
+        await asyncio.sleep(5)
         if user:
             return UserSchema(**user.model_dump())
         raise NotFoundException(f"User with {user_id} not found")

@@ -9,8 +9,11 @@ from sqlalchemy import text
 from app.configs.db_config import async_session
 from app.exceptions.global_exception_handler import global_exception_handler
 from app.middlewares.jwt_middleware import JWTMiddleware
+from app.models.user import User
 from app.routers import auth, health, shipment, user
 from app.utils.logger import get_logger
+from app.configs.schedule_config import scheduler, scheduled
+from app.configs.db_config import AsyncSession
 
 log = get_logger(__name__)
 
@@ -20,7 +23,9 @@ async def lifespan_handler(app: FastAPI):
     log.info("App startup")
     async with async_session() as session:
         await session.execute(text("Select 1"))
+    scheduler.start()
     yield
+    scheduler.shutdown()
     log.info("App shutdown")
 
 
@@ -29,6 +34,18 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None,
 )
+
+
+@scheduled(cron="25 33 3 * * *", zone="Asia/Kolkata")
+async def test_scheduler(db: AsyncSession):
+    log.info("Hi Schduler is running")
+    user = await db.get(User, 1)
+    log.info(f"User is: {user}")
+
+
+@scheduled(fixedRate=5000)
+def test_scheduler2():
+    log.info("Hi Schduler2 is running")
 
 
 @app.get("/docs", include_in_schema=False)

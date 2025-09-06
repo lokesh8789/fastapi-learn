@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+import asyncio
+from datetime import timedelta, datetime
+from fastapi import APIRouter, BackgroundTasks
 
 from app.configs.db_config import DBSessionDep
 from app.dependencies import CurrentUserDep
+from app.models.user import User
 from app.schemas.user import UserCreate, UserSchema
 from app.services.user_service import UserServiceDep
 from app.utils.logger import get_logger
@@ -30,10 +33,21 @@ async def get_user(
     id: int,
     db: DBSessionDep,
     user_service: UserServiceDep,
-    current_user: CurrentUserDep
+    current_user: CurrentUserDep,
+    background_tasks: BackgroundTasks,
 ) -> UserSchema:
     log.info(f"Fetching user by ID with current user is: {current_user.email}")
+
+    background_tasks.add_task(test_task, id, db)
+    asyncio.create_task(test_task(id, db))
     return await user_service.get_user_by_id(db, id)
+
+
+async def test_task(id: int, db: DBSessionDep):
+    log.info(f"Testing In Background For Id: {id}")
+    await asyncio.sleep(10)
+    user = await db.get(User, id)
+    log.info(f"user is: {user}")
 
 
 @router.get("/get-all")
