@@ -13,3 +13,8 @@ class UserSchema(BaseModel):
     name: str
     is_active: bool
     email: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    name: str

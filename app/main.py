@@ -43,9 +43,9 @@ async def test_scheduler(db: AsyncSession):
     log.info(f"User is: {user}")
 
 
-@scheduled(fixedRate=5000)
-def test_scheduler2():
-    log.info("Hi Schduler2 is running")
+# @scheduled(fixedRate=5000)
+# def test_scheduler2():
+#     log.info("Hi Schduler2 is running")
 
 
 @app.get("/docs", include_in_schema=False)

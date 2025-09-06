@@ -16,6 +16,7 @@ public_paths: list[str] = [
     "/docs",
     "/openapi.json",
     "/api/v1/health",
+    "/api/v1/users/sse",
 ]
 
 
