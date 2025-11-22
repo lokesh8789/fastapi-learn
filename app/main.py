@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import time
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,9 +44,11 @@ async def test_scheduler(db: AsyncSession):
     log.info(f"User is: {user}")
 
 
-# @scheduled(fixedRate=5000)
+# @scheduled(fixedRate=1000)
 # def test_scheduler2():
 #     log.info("Hi Schduler2 is running")
+#     time.sleep(2)
+#     log.info("Sleep Completed")
 
 
 @app.get("/docs", include_in_schema=False)

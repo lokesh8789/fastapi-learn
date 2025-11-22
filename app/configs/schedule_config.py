@@ -39,20 +39,29 @@ def scheduled(
         is_async = inspect.iscoroutinefunction(func)
         sig = inspect.signature(func)
         expects_db = "db" in sig.parameters
+        if expects_db and not is_async:
+            raise RuntimeError(
+                f"@scheduled error: '{func.__name__}' expects DB but is not async."
+            )
 
         @wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
-            if expects_db:
-                async with async_session() as db:
-                    if is_async:
-                        return await func(db, *args, **kwargs)
-                    else:
-                        return await asyncio.to_thread(func, db, *args, **kwargs)
-            else:
-                if is_async:
-                    return await func(*args, **kwargs)
+            async def run_job():
+                if expects_db:
+                    async with async_session() as db:
+                        if is_async:
+                            return await func(db, *args, **kwargs)
+                        else:
+                            raise RuntimeError(
+                                f"@scheduled function '{func.__name__}' expects DB but is not async."
+                            )
                 else:
-                    return await asyncio.to_thread(func, *args, **kwargs)
+                    if is_async:
+                        return await func(*args, **kwargs)
+                    else:
+                        return await asyncio.to_thread(func, *args, **kwargs)
+            asyncio.create_task(run_job())
+            return
 
         tz = ZoneInfo(zone) if zone else None
 
