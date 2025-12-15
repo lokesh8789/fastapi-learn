@@ -21,8 +21,8 @@ scheduler = AsyncIOScheduler()
 def scheduled(
     *,
     cron: str | None = None,
-    fixedRate: int | None = None,  # milliseconds like Spring Boot
-    initialDelay: int | None = None,  # milliseconds before first run
+    fixed_rate: int | None = None,  # milliseconds like Spring Boot
+    initial_delay: int | None = None,  # milliseconds before first run
     zone: str | None = None,
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
@@ -30,8 +30,8 @@ def scheduled(
 
     Parameters:
     - cron: cron expression ("*/10 * * * * *" for every 10 seconds)
-    - fixedRate: run every N milliseconds from start time
-    - initialDelay: wait before first run (ms)
+    - fixed_rate: run every N milliseconds from start time
+    - initial_delay: wait before first run (ms)
     - zone: timezone string (e.g., "Asia/Kolkata")
     """
 
@@ -67,8 +67,8 @@ def scheduled(
 
         # Compute next run for initialDelay only for interval/fixedDelay
         start_at: datetime | None = None
-        if initialDelay is not None:
-            start_at = datetime.now(tz) + timedelta(milliseconds=initialDelay)
+        if initial_delay is not None:
+            start_at = datetime.now(tz) + timedelta(milliseconds=initial_delay)
 
         if cron:
             # For cron, APScheduler automatically calculates next run if next_run_time=None
@@ -76,17 +76,17 @@ def scheduled(
                 wrapper,
                 build_cron_trigger(cron, tz),
             )
-        elif fixedRate is not None:
+        elif fixed_rate is not None:
             if start_at is not None:
                 scheduler.add_job(
                     wrapper,
-                    IntervalTrigger(seconds=fixedRate / 1000.0, timezone=tz),
+                    IntervalTrigger(seconds=fixed_rate / 1000.0, timezone=tz),
                     next_run_time=start_at,
                 )
             else:
                 scheduler.add_job(
                     wrapper,
-                    IntervalTrigger(seconds=fixedRate / 1000.0, timezone=tz),
+                    IntervalTrigger(seconds=fixed_rate / 1000.0, timezone=tz),
                 )
         else:
             raise ValueError("One of cron or fixedRate must be set")
